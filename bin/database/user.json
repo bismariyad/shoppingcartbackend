@@ -1,0 +1,22 @@
+[
+    {
+        "username":"Bisma",
+        "userId":1,
+        "password":"bisma123",
+        "address" : {
+        "addressLineOne":"Ahlan",
+        "city":"Trivandrum",
+        "pincode":"695607"
+        }
+    },
+    {
+        "username":"Riyad",
+        "userId":2,
+        "password":"Riyad12345",
+        "address" : {
+            "addressLineOne":"RF VILLA",
+            "city":"kollam",
+            "pincode":"695047"
+        }
+    }
+]
