@@ -1,22 +1,35 @@
 [
-    {
-        "username":"Bisma",
-        "userId":1,
-        "password":"bisma123",
-        "address" : {
-        "addressLineOne":"Ahlan",
-        "city":"Trivandrum",
-        "pincode":"695607"
-        }
-    },
-    {
-        "username":"Riyad",
-        "userId":2,
-        "password":"Riyad12345",
-        "address" : {
-            "addressLineOne":"RF VILLA",
-            "city":"kollam",
-            "pincode":"695047"
-        }
+  {
+    "username": "Bisma",
+    "userId": 1,
+    "password": "bisma123",
+    "usertype": "customer",
+    "address": {
+      "addressLineOne": "Ahlan",
+      "city": "Trivandrum",
+      "pincode": "695607"
     }
+  },
+  {
+    "username": "Riyad",
+    "userId": 2,
+    "password": "Riyad12345",
+    "usertype": "seller",
+    "address": {
+      "addressLineOne": "RF VILLA",
+      "city": "kollam",
+      "pincode": "695047"
+    }
+  },
+  {
+    "userId": 3,
+    "username": "adam",
+    "password": "123587",
+    "address": {
+      "addressLineOne": "Gh house",
+      "city": "Ernakulam",
+      "pincode": "98787"
+    },
+    "usertype": "admin"
+  }
 ]
