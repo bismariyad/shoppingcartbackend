@@ -1,14 +1,17 @@
 var express = require('express');
 var router = express.Router();
-const users = require("../bin/database/user.json");
 
 const fs = require("fs");
 const path = require("path");
 
+
+const users = require("../bin/database/user.json");
 const datafile = path.join(__dirname,"../bin/database/user.json")
+
 
 router.post("/user",(req,res) => {
     try{
+        
     
     const { username, password,address,usertype} = req.body;
     const newuser = {
@@ -18,15 +21,32 @@ router.post("/user",(req,res) => {
         "address" : address,
         "usertype" : usertype,
  };
+ let userverification = validateusername(username);
+ if(userverification == true){
+    let userpasswordverification = validatepassword(password);
+    if(userpasswordverification == true){
+        let usertypeverification = validateusertype(usertype);
+        if(usertypeverification == true){
+    
  
     users.push(newuser);
     writedata (users);
+    
     return res.status(200).send(newuser);
     
-
+        }
+        else{
+            return res.status(404).send('usertype not valid');
+        }}
+        else{
+            return res.status(404).send('password not valid')
+        }
+    } else{
+        return res.status(404).send('username not valid');
+    }
 
 } catch (error){
-    return res.send(error);
+    return res.send(error.toString());
 }
 });                                                            
 
@@ -75,12 +95,13 @@ return res.status(200).send(users);
 
 router.delete("/user/:id", (req, res) => {
     try{
+        const id=users.find((u) => u.userid === parseInt(req.params.id));
     const index = users.findIndex((b) => b.userId === parseInt(req.params.id));
     if (index>0) {
         users.splice(index,2);
       }
       writedata(users);
-      return res.status(200).send(users)
+      return res.status(200).send(id)
     }catch(error){
         return res.send(error);
     }
@@ -100,10 +121,29 @@ fs.writeFile(datafile,jsonstring,(err) =>
             console.log("file write successfully");
         }
 
+});
 }
+function validateusername(string){
+    const pattern = /^[A-Za-z0-9_]{3,25}$/;
+    return pattern.test(string);
 
-);
 }
+function validatepassword(password){
+    const pattern = /^[^\s]{8,25}$/;
+    return pattern.test(password);
+}
+function validateusertype(usertype){
+    const userType ={
+        customer:"customer",
+        seller:"seller",
+        admin:"admin"
+    }
+    if(Object.values(userType).includes(usertype)){
+        return true;
+    }
+    else{
+        return false;
+    }}
+
 module.exports = router;
-
 

@@ -11,15 +11,9 @@
     }
   },
   {
-    "username": "Riyad",
+    "username": "aida",
     "userId": 2,
-    "password": "Riyad12345",
-    "usertype": "seller",
-    "address": {
-      "addressLineOne": "RF VILLA",
-      "city": "kollam",
-      "pincode": "695047"
-    }
+    "password": "45688998"
   },
   {
     "userId": 3,
@@ -30,6 +24,19 @@
       "city": "Ernakulam",
       "pincode": "98787"
     },
+    "usertype": "admin"
+  },
+  {
+    "userId": 4,
+    "username": "aida",
+    "password": "45688998",
+    "address": "hg house",
+    "usertype": "admin"
+  },
+  {
+    "userId": 5,
+    "username": "ram",
+    "password": "524fyggsssdfdfd",
     "usertype": "admin"
   }
 ]
