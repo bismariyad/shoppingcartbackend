@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var usermodel = require('../models/user.js');
 
 const fs = require("fs");
 const path = require("path");
@@ -14,14 +15,27 @@ router.post("/user",(req,res) => {
         
     
     const { username, password,address,usertype} = req.body;
-    const newuser = {
-        "userId" : users.length+1,
+    const newuser = new usermodel({
+        //"userId" : users.length+1,
         "username" : username,
         "password" : password,
         "address" : address,
         "usertype" : usertype,
- };
- let userverification = validateusername(username);
+    });
+
+const validate = newuser.validator();
+
+const addressvalidate = newuser.address.validation();
+if (validationResult.status && addressresult.status) {
+    users.push(newuser);
+    writedata(users);
+    return res.status(200).send(newuser);
+  } else {
+    return res.status(403).send(JSON.stringify(validationResult )+JSON.stringify( addressresult));
+  }
+
+
+ /*let userverification = validateusername(username);
  if(userverification == true){
     let userpasswordverification = validatepassword(password);
     if(userpasswordverification == true){
@@ -43,12 +57,12 @@ router.post("/user",(req,res) => {
         }
     } else{
         return res.status(404).send('username not valid');
-    }
+    }*/
 
 } catch (error){
     return res.send(error.toString());
 }
-});                                                            
+});                                                           
 
 
 

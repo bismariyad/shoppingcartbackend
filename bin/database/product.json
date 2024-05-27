@@ -1,0 +1,16 @@
+[
+  {
+    "productId": 1,
+    "productName": "paper",
+    "productWeight": "9",
+    "productWeightMetrics": "gm",
+    "productHeight": "7",
+    "productHeightMetrics": "cm",
+    "productColors": [
+      "Black",
+      "Blue",
+      "Red"
+    ],
+    "productDescription": "This is a good pen"
+  }
+]
