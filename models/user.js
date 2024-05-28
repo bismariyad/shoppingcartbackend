@@ -25,7 +25,7 @@ validator(){
         validation.message.push("invalid password");
         validation.status = false;
     }
-    if(!usertypepattern.test(this.usertype)){
+    if(!userTypepattern.includes(this.usertype)){
         validation.message.push("invalid usertype");
         validation.status = false;
     }
@@ -41,8 +41,8 @@ class address{
     }
     validation(){
     const addressLineOnepattern =/^[A-Za_z_]{2,25}$/;
-    const citypattern =/^[a-z]$/;
-    const pincodepattern =/^[1-9]{1}[0-9]{2}\\s{0, 1}[0-9]{3}$/;
+    const citypattern =/^[a-z]{3,15}$/;
+    const pincodepattern =/^[1-9]{1}[0-9]{5}$/;
     const validation ={
         message:[],
         status:true

@@ -14,7 +14,7 @@ module.exports = class productmodel{
         const productweightmetricspattern =/^(kg|g)?$/;
         const productheightpattern=/^\d+(\.\d+)?$/;
         const productheightmetricspattern=/^(cm|m|in)?$/;
-        const productcolorspattern =/^('+colors.join('|')+')$/;
+       // const productcolorspattern =/^('+colors.join('|')+')$/;
         const productdescriptionpattern =/^[A-Za-z\s.]+$/;
         const validation = {
             message:[],
@@ -44,10 +44,10 @@ module.exports = class productmodel{
         validation.message.push("invalid productheightmetrics");
         validation.status = false;
     }
-    if(!productcolorspattern.test(this.productColors)){
+   /* if(!productcolorspattern.test(this.productColors)){
         validation.message.push("invalid productcolors");
         validation.status = false;
-    }
+    }*/
     if(!productdescriptionpattern.test(this.productDescription)){
         validation.message.push("invalid productdescription");
         validation.status = false;

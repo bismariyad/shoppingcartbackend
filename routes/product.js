@@ -1,120 +1,142 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-var productmodel = require('../models/product.js');
+var productmodel = require("../models/product.js");
 const fs = require("fs");
 const path = require("path");
-        
+var MongoClient = require("mongodb").MongoClient;
+var url = "mongodb://127.0.0.1:27017";
+
 const products = require("../bin/database/product.json");
-const datafile = path.join(__dirname,"../bin/database/product.json");
+const datafile = path.join(__dirname, "../bin/database/product.json");
 
-router.get('/Product',(req,res) => {
-    return res.send(products);
-
-})
+router.get("/Product", (req, res) => {
+  return res.send(products);
+});
 router.post("/add", (req, res) => {
-    
+  const {
+    productname,
+    productweight,
+    productweightmetrics,
+    productheight,
+    productheightmetrics,
+    productcolors,
+    productdescription,
+  } = req.body;
 
-        const { productname, productweight,productweightmetrics,productheight,productheightmetrics,productcolors,productdescription} = req.body;
-     
-     const newproduct = new productmodel({
-         // "productId" : products.length+1,
-           "productName":productname,
-           "productWeight":productweight,
-           "productWeightMetrics":productweightmetrics,
-           "productHeight":productheight,
-           "productHeightMetrics":productheightmetrics,
-           "productColors":productcolors,
-           "productDescription":productdescription
-
-
-     });
-const validatedproduct = newproduct.validator();
-if(validatedproduct.status)
-{
-    products.push(newproduct);
-
- return res.status(200).send(newproduct);
-       writedata(products);
-}
-else{
-    return res.send (JSON.stringify(validatedproduct));
-}
-});
-
-    router.get("/Product/:id",(req,res) => {
-
-        const idmatch = products.find((s) => s.productId === parseInt(req.params.id))
-        console.log(idmatch);
-        if(!idmatch){
-            return res.status(200).send("id not found");
-        }
-        return res.send(idmatch);
-    });
-
-    router.put("/Product/:id",(req,res) => {
-        
-        const { productname, productweight,productweightmetrics,productheight,productheightmetrics,productcolors,productdescription} = req.body;
-        const id = products.find((s) => s.productId ===parseInt(req.params.id));
-const newproduct = new productmodel({
+  const newproduct = new productmodel({
     // "productId" : products.length+1,
-      "productName":productname,
-      "productWeight":productweight,
-      "productWeightMetrics":productweightmetrics,
-      "productHeight":productheight,
-      "productHeightMetrics":productheightmetrics,
-      "productColors":productcolors,
-      "productDescription":productdescription
+    productName: productname,
+    productWeight: productweight,
+    productWeightMetrics: productweightmetrics,
+    productHeight: productheight,
+    productHeightMetrics: productheightmetrics,
+    productColors: productcolors,
+    productDescription: productdescription,
+  });
+  const validatedproduct = newproduct.validator();
+  if (validatedproduct.status) {
+    products.push(newproduct);
+    try {
+      console.log("bisma");
+      MongoClient.connect(
+        "mongodb://0.0.0.0:27017",
+        { useNewUrlParser: true, useUnifiedTopology: true },
+        function (err, connect) {
+          if (err) {
+            console.log(err);
+            throw err;
+          }
+          var dbo = db.db("admin");
+          console.log("bs");
+          dbo.collection("product").insertOne(newproduct, function (err, res) {
+            if (err) {
+              console.log(err);
 
-
+              throw err;
+            }
+            console.log("1 document inserted");
+            db.close();
+            return res.status(200).send(newproduct);
+          });
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  } else {
+    return res.send(JSON.stringify(validatedproduct));
+  }
 });
 
+router.get("/Product/:id", (req, res) => {
+  const idmatch = products.find((s) => s.productId === parseInt(req.params.id));
+  console.log(idmatch);
+  if (!idmatch) {
+    return res.status(200).send("id not found");
+  }
+  return res.send(idmatch);
+});
 
-        const editvalidate = newproduct.validator();
-        if(editvalidate.status){
-        id.productName = productname;
-        id.productWeight = productweight;
-        id.productWeightMetrics = productweightmetrics;
-        id.productHeight = productheightmetrics;
-        id.productHeightMetrics = productheightmetrics;
-        id.productColors = productcolors;
-        id.productDescription = productdescription;
-            
-            return res.status(200).send(id);
-            writedata(products);
-        }
-        else{
-            return res.send (JSON.stringify(editvalidate));
-        }
-        
+router.put("/Product/:id", (req, res) => {
+  const {
+    productname,
+    productweight,
+    productweightmetrics,
+    productheight,
+    productheightmetrics,
+    productcolors,
+    productdescription,
+  } = req.body;
+  const id = products.find((s) => s.productId === parseInt(req.params.id));
+  const newproduct = new productmodel({
+    // "productId" : products.length+1,
+    productName: productname,
+    productWeight: productweight,
+    productWeightMetrics: productweightmetrics,
+    productHeight: productheight,
+    productHeightMetrics: productheightmetrics,
+    productColors: productcolors,
+    productDescription: productdescription,
+  });
 
-        
-        
-    });
+  const editvalidate = newproduct.validator();
+  if (editvalidate.status) {
+    id.productName = productname;
+    id.productWeight = productweight;
+    id.productWeightMetrics = productweightmetrics;
+    id.productHeight = productheightmetrics;
+    id.productHeightMetrics = productheightmetrics;
+    id.productColors = productcolors;
+    id.productDescription = productdescription;
 
-    router.delete("/Product/:id", (req, res) => {
-        
-            const id = products.find((u) => u.productId === parseInt(req.params.id));
-        const index = products.findIndex((b) => b.productId === parseInt(req.params.id));
-        if (index>=0) {
-            products.splice(index,1);
-          }
-          
-          return res.send(id)
-        });
+    return res.status(200).send(id);
+    writedata(products);
+  } else {
+    return res.send(JSON.stringify(editvalidate));
+  }
+});
 
-       function  writedata(products){
-        const jsonstring = JSON.stringify(products,null,2)
-        fs.writeFile(datafile,jsonstring,(err) => 
-            {
-                if(err)
-                    {
-                        console.log(err.message);
-                    }
-                    else{
-                        console.log("file write successfully");
-                    }
-            
-            });
-        }
+router.delete("/Product/:id", (req, res) => {
+  const id = products.find((u) => u.productId === parseInt(req.params.id));
+  const index = products.findIndex(
+    (b) => b.productId === parseInt(req.params.id)
+  );
+  if (index >= 0) {
+    products.splice(index, 1);
+  }
 
-      module.exports = router;
+  return res.send(id);
+});
+
+function writedata(products) {
+  const jsonstring = JSON.stringify(products, null, 2);
+  fs.writeFile(datafile, jsonstring, (err) => {
+    if (err) {
+      console.log(err.message);
+    } else {
+      console.log("file write successfully");
+    }
+  });
+}
+
+module.exports = router;

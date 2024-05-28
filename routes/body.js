@@ -26,12 +26,12 @@ router.post("/user",(req,res) => {
 const validate = newuser.validator();
 
 const addressvalidate = newuser.address.validation();
-if (validationResult.status && addressresult.status) {
+if (validate.status && addressvalidate.status) {
     users.push(newuser);
     writedata(users);
     return res.status(200).send(newuser);
   } else {
-    return res.status(403).send(JSON.stringify(validationResult )+JSON.stringify( addressresult));
+    return res.status(403).send(JSON.stringify(validate)+JSON.stringify( addressvalidate));
   }
 
 
@@ -83,13 +83,27 @@ router.put("/user/:id",(req,res) => {
     try{
     const { username,password,address,usertype} = req.body;
     const id = users.find((s) => s.userId === parseInt(req.params.id))
+const newuser = newusermodel({
+    "username" : username,
+        "password" : password,
+        "address" : address,
+        "usertype" : usertype,
+
+});
+
+const editvalidate = newuser.validate();
+const addressvalidate = newuser.address.validation();
+if(editvalidate.status && addressvalidate.status){
     id.username = username;
     id.password = password;
     id.address = address;
     id.usertype = usertype;
     writedata (users);
     return res.status(200).send(id);
-    
+}
+else{
+    return res.send (JSON.stringify(editvalidate)+JSON.stringify(addressvalidate));
+}
     }catch(error){
         return res.send(error);
     }
