@@ -4,12 +4,22 @@ const bodyParser = require('body-parser');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://127.0.0.1/admin')
+.then(res=>{
+  console.log("mongodb connected")
+})
+.catch(error=>{
+  console.log(error)
+  
+})
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
 var bodyRouter = require('./routes/body');
 var productRouter = require('./routes/product');
+const { error } = require('console');
 
 var app = express();
 app.use(bodyParser.json());

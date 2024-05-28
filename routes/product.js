@@ -6,13 +6,15 @@ const path = require("path");
 var MongoClient = require("mongodb").MongoClient;
 var url = "mongodb://127.0.0.1:27017";
 
-const products = require("../bin/database/product.json");
+
+const products = require("../bin/database/Product.js");
 const datafile = path.join(__dirname, "../bin/database/product.json");
+
 
 router.get("/Product", (req, res) => {
   return res.send(products);
 });
-router.post("/add", (req, res) => {
+router.post("/add", async(req, res) => {
   const {
     productname,
     productweight,
@@ -34,32 +36,13 @@ router.post("/add", (req, res) => {
     productDescription: productdescription,
   });
   const validatedproduct = newproduct.validator();
+  const newProduct = new products(newproduct);
   if (validatedproduct.status) {
-    products.push(newproduct);
+    //products.push(newproduct);
     try {
       console.log("bisma");
-      MongoClient.connect(
-        "mongodb://0.0.0.0:27017",
-        { useNewUrlParser: true, useUnifiedTopology: true },
-        function (err, connect) {
-          if (err) {
-            console.log(err);
-            throw err;
-          }
-          var dbo = db.db("admin");
-          console.log("bs");
-          dbo.collection("product").insertOne(newproduct, function (err, res) {
-            if (err) {
-              console.log(err);
-
-              throw err;
-            }
-            console.log("1 document inserted");
-            db.close();
-            return res.status(200).send(newproduct);
-          });
-        }
-      );
+      await newProduct.save();
+    res.status(201).json(newProduct);
     } catch (error) {
       console.log(error);
     }
